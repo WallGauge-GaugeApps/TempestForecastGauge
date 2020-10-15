@@ -1,0 +1,11 @@
+{
+    "descripition":"Tempest Weather (4 gauges)",
+    "uuid":"31a6fdce-ae4b-4337-91c2-5be685f7fc0f",
+    "dBusName":"com.TempestForecastGauge",
+    "calibrationTable": [[0,15],[1000,55],[2000,95],[3000,135],[4000,175],[5000,215],[6000,255],[7000,294],[8000,334],[9000,373],[10000,413],[20000,453],[30000,493],[40000,533],[50000,574],[60000,614]],
+    "gaugeIrAddress":"16",
+    "battLifeInDays":"360",
+    "battLastReplaced":"",
+    "gaugeURL":"https://WallGauge.com",
+    "apiKey":"notSet"
+}
