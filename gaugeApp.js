@@ -1,9 +1,9 @@
 const WxData = require('weatherflow-data-getter');
 const MyAppMan = require('./MyAppManager.js');
 
-const getCurrentWxInterval = 10;     // in minutes
+const getCurrentWxInterval = 5;     // in minutes
 
-var mainPoller = null;
+var getCurrentPoller = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var wApi = {}       //new WxData();
@@ -32,7 +32,7 @@ class gaugeApp {
                 myAppMan.setGaugeStatus('weatherFlow API Key not set. Please set a new API Key for this station. ');
             } else {
                 myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-                clearInterval(mainPoller);
+                clearInterval(getCurrentPoller);
                 console.log('Re-Init WeatherFlow API with new config...');
                 wApi = new WxData(myAppMan.config.apiKey);
                 setupWxEvents();
@@ -40,7 +40,7 @@ class gaugeApp {
         });
 
         myAppMan.on('apiKey', (newKey) => {
-            console.log('A new apiKey event received. ' + newKey);
+            console.log('A new apiKey event received. ');
             myAppMan.setGaugeStatus('Received new apiKey.');
             var objToSave = {
                 apiKey: newKey
@@ -66,8 +66,9 @@ class gaugeApp {
 function setupWxEvents() {
     console.log('Setting up WX Events...');
     wApi.on('ready', () => {
-        console.log('WX API ready for ' + wApi.station.publicName);
+        console.log('WeatherFlow API ready to receive calls for station named: ' + wApi.station.publicName);
         getAllWxData();
+        getCurrentPoller();
     });
 
     wApi.on('errorStationMetaData', (err) => {
@@ -102,12 +103,26 @@ function getAllWxData() {
         })
 };
 
-function startPoller() {
-    console.log('Starting endless poller.');
-    clearInterval(mainPoller);
-    mainPoller = setInterval(() => {
-        //put polling calls here
-    }, 60000);
+function getCurrentConditions(){
+    console.log('Requesting current weater...');
+    wApi.getCurrent()
+    .then((rslt) => {
+        console.log('Get current complete. Observation Date = ' + wApi.data.obsDate);
+        console.dir(wApi.data.current, { depth: null });
+        console.log('Here is the lightning information:')
+        console.dir(wApi.data.lightning, { depth: null });
+    })
+    .catch((err) => {
+        console.error('Error calling wApi:', err);
+    })
+};
+
+function getCurrentPoller() {
+    console.log('Starting get current WX conditions poller every '+ getCurrentWxInterval+' minutes.');
+    clearInterval(getCurrentPoller);
+    getCurrentPoller = setInterval(() => {
+        getCurrentConditions();
+    }, getCurrentWxInterval * 60000);
 };
 
 function getRandomInt(min, max) {
