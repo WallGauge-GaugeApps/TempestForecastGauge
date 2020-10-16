@@ -29,32 +29,18 @@ class gaugeApp {
             console.log('New update event has fired.  Reloading gauge objects...');
             myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
             clearInterval(mainPoller);
-            console.log('Re-Init senseData with new config...');
+            console.log('Re-Init WeatherFlow API with new config...');
             wApi = new WxData(myAppMan.config.apiKey);
         });
 
-        myAppMan.on('apiKey', () => {
+        myAppMan.on('apiKey', (newKey) => {
             console.log('A new apiKey event received.');
-            myAppMan.setGaugeStatus('Received new apiKey.');
+            myAppMan.setGaugeStatus('Received new apiKey.' + newKey);
+            var objToSave = {
+                apiKey: newKey
+            }
+            myAppMan.saveItem(objToSave);
         })
-
-        myAppMan.on('userPW', () => {
-            console.log('A new user PW event received.');
-            if (myAppMan.userID != 'notSet' && myAppMan.userPW != 'notSet') {
-                console.log('Received new user ID and Password. ');
-                myAppMan.setGaugeStatus('Received new user ID and Password.');
-                var objToSave = {
-                    userID: myAppMan.userID,
-                    userPW: myAppMan.userPW
-                };
-                myAppMan.saveItem(objToSave);
-            } else {
-                console.log('Login ID and Password must both be set.  Enter login ID first then password. Try agian in that order.');
-                myAppMan.setGaugeStatus('Login ID and Password must both be set.  Enter login ID first then password. Try agian in that order.');
-            };
-            myAppMan.userID = 'notSet';
-            myAppMan.userPW = 'notSet';
-        });
 
         console.log('First data call will occur in ' + (randomStart / 1000).toFixed(2) + ' seconds.');
         console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes.');
