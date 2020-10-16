@@ -118,7 +118,7 @@ function getCurrentConditions(){
 };
 
 function getCurrentPoller() {
-    console.log('Starting get current WX conditions poller every '+ getCurrentWxInterval+' minutes.');
+    console.log('Starting get current WX conditions poller.  It will update every '+ getCurrentWxInterval+' minutes.');
     clearInterval(getCurrentPollerTimer);
     getCurrentPoller = setInterval(() => {
         getCurrentConditions();
