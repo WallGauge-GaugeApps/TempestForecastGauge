@@ -98,13 +98,6 @@ function getAllWxData() {
                 wApi.data.forecast.precipChance + "%, obs = " +
                 wApi.data.obsDate
             );
-
-            console.log('Getting all rain history....');
-            return wApi.updateAllHistoryValues()
-        })
-        .then((rslt) => {
-            console.log('Get rain history complete:');
-            console.dir(wApi.data.history, { depth: null })
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -115,10 +108,13 @@ function getCurrentConditions() {
     console.log('Requesting current weater...');
     wApi.getCurrent()
         .then((rslt) => {
-            console.log('Get current complete. Observation Date = ' + wApi.data.obsDate);
-            // console.dir(wApi.data.current, { depth: null });
-            // console.log('Here is the lightning information:')
-            // console.dir(wApi.data.lightning, { depth: null });
+            console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
+                wApi.data.current.temp, '°F, max = ' +
+                wApi.data.forecast.maxTemp + "°F, min = " +
+                wApi.data.forecast.minTemp + "°F, precip =" +
+                wApi.data.forecast.precipChance + "%."
+            );
+
             myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
