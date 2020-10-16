@@ -6,7 +6,7 @@ const getCurrentWxInterval = 10;     // in minutes
 var mainPoller = null;
 var randomStart = getRandomInt(5000, 60000);
 
-var wApi = new WxData();
+var wApi = {}       //new WxData();
 var myAppMan = {};
 
 class gaugeApp {
@@ -57,11 +57,12 @@ function setupWxEvents() {
     wApi.on('ready', () => {
         console.log('WX API ready for ' + wApi.station.publicName);
         getAllWxData();
-    })
+    });
 
     wApi.on('errorStationMetaData', (err) =>{
         console.error('Error with weatherflow-data-getter class construction.', err);
-    })
+        myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
+    });
 };
 
 function getAllWxData() {
