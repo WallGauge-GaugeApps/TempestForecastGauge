@@ -27,10 +27,15 @@ class gaugeApp {
 
         myAppMan.on('Update', () => {
             console.log('New update event has fired.  Reloading gauge objects...');
-            myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-            clearInterval(mainPoller);
-            console.log('Re-Init WeatherFlow API with new config...');
-            wApi = new WxData(myAppMan.config.apiKey);
+            if (myAppMan.config.apiKey == '' || myAppMan.config.apiKey == null) {
+                console.warn('weatherFlow API Key not set.  Waiting for user to set value...');
+                myAppMan.setGaugeStatus('weatherFlow API Key not set. Please set a new API Key for this station. ');
+            } else {
+                myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
+                clearInterval(mainPoller);
+                console.log('Re-Init WeatherFlow API with new config...');
+                wApi = new WxData(myAppMan.config.apiKey);
+            };
         });
 
         myAppMan.on('apiKey', (newKey) => {
