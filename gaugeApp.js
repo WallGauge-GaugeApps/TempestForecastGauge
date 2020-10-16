@@ -46,8 +46,13 @@ class gaugeApp {
         console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes.');
 
         setTimeout(() => {
-            wApi = new WxData(myAppMan.config.apiKey);
-            setupWxEvents();
+            if (myAppMan.config.apiKey == '' || myAppMan.config.apiKey == null) {
+                console.warn('weatherFlow API Key not set.  Waiting for user to set value...');
+                myAppMan.setGaugeStatus('weatherFlow API Key not set. Please set a new API Key for this station. ');
+            } else {
+                wApi = new WxData(myAppMan.config.apiKey);
+                setupWxEvents();
+            };
         }, randomStart);
     };
 };
@@ -59,7 +64,7 @@ function setupWxEvents() {
         getAllWxData();
     });
 
-    wApi.on('errorStationMetaData', (err) =>{
+    wApi.on('errorStationMetaData', (err) => {
         console.error('Error with weatherflow-data-getter class construction.', err);
         myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
     });
