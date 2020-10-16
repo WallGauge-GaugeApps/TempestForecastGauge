@@ -1,4 +1,5 @@
 const SenseDataDelegate = require('sense-data-getter');
+const WxData = require('weatherflow-data-getter');
 const MyAppMan = require('./MyAppManager.js');
 
 const reconnectInterval = 60;    // in minutes
@@ -7,7 +8,7 @@ const getTrendInterval = 10;     // in minutes
 var mainPoller = null;
 var randomStart = getRandomInt(5000, 60000);
 
-var sense = {};
+var wApi = new WxData();
 var myAppMan = {};
 
 class gaugeApp {
@@ -31,7 +32,7 @@ class gaugeApp {
             myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
             clearInterval(mainPoller);
             console.log('Re-Init senseData with new config...');
-            sense = new SenseDataDelegate(myAppMan.config.userID, myAppMan.config.userPW);
+            wApi = new WxData(myAppMan.config.apiKey);
         });
 
         myAppMan.on('userPW', () => {
@@ -56,9 +57,43 @@ class gaugeApp {
         console.log('When a Sense connection is established a poller will open and close a web socket every 1 minute, read trend data every ' + getTrendInterval + ' minutes, and re-authenticate every ' + reconnectInterval + ' minutes.');
 
         setTimeout(() => {
-            sense = new SenseDataDelegate(myAppMan.config.userID, myAppMan.config.userPW)
+            wApi = new WxData(myAppMan.config.apiKey);
+            setupWxEvents();
         }, randomStart);
     };
+};
+
+function setupWxEvents() {
+    wApi.on('ready', () => {
+        console.log('WX API ready for ' + wApi.station.publicName);
+        getAllWxData();
+    })
+};
+
+function getAllWxData() {
+    console.log('Getting current conditons for ' + wApi.station.publicName)
+    wApi.getCurrent()
+        .then((rslt) => {
+            console.log('Get current complete. Observation Date = ' + wApi.data.obsDate);
+            console.dir(wApi.data.current, { depth: null });
+            console.log('Here is the lightning information:')
+            console.dir(wApi.data.lightning, { depth: null });
+            console.log('Getting Forecast...')
+            return wApi.getForecast()
+        })
+        .then((rslt) => {
+            console.log("Get forecast complete:");
+            console.dir(wApi.data.forecast, { depth: null });
+            console.log('Getting all rain history....');
+            return wApi.updateAllHistoryValues()
+        })
+        .then((rslt) => {
+            console.log('Get rain history complete:');
+            console.dir(wApi.data.history, { depth: null })
+        })
+        .catch((err) => {
+            console.error('Error calling wApi:', err);
+        })
 };
 
 function startPoller() {
