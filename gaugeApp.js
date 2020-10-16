@@ -33,6 +33,11 @@ class gaugeApp {
             wApi = new WxData(myAppMan.config.apiKey);
         });
 
+        myAppMan.on('apiKey', () => {
+            console.log('A new apiKey event received.');
+            myAppMan.setGaugeStatus('Received new apiKey.');
+        })
+
         myAppMan.on('userPW', () => {
             console.log('A new user PW event received.');
             if (myAppMan.userID != 'notSet' && myAppMan.userPW != 'notSet') {
@@ -62,9 +67,14 @@ class gaugeApp {
 };
 
 function setupWxEvents() {
+    console.log('Setting up WX Events...');
     wApi.on('ready', () => {
         console.log('WX API ready for ' + wApi.station.publicName);
         getAllWxData();
+    })
+
+    wApi.on('errorStationMetaData', (err) =>{
+        console.error('Error with weatherflow-data-getter class construction.', err);
     })
 };
 

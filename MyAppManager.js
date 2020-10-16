@@ -6,7 +6,7 @@ class myAppManager extends AppMan {
         this.apiKey = 'notSet';
         var apiKey = this.bPrl.Characteristic('859082f0-e8b3-423f-8470-9d5465b13746', 'apiKey', ["encrypt-read", "encrypt-write"]);
         apiKey.on('WriteValue', (device, arg1) => {
-            console.log(device + ', has set new user PW.');
+            console.log(device + ', has set new user apiKey.');
             this.apiKey = arg1.toString('utf8');
             this.emit('apiKey', this.apiKey);
         });
