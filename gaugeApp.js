@@ -3,7 +3,7 @@ const MyAppMan = require('./MyAppManager.js');
 
 const getCurrentWxInterval = 5;     // in minutes
 
-var getCurrentPoller = null;
+var getCurrentPollerTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var wApi = {}       //new WxData();
@@ -32,7 +32,7 @@ class gaugeApp {
                 myAppMan.setGaugeStatus('weatherFlow API Key not set. Please set a new API Key for this station. ');
             } else {
                 myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-                clearInterval(getCurrentPoller);
+                clearInterval(getCurrentPollerTimer);
                 console.log('Re-Init WeatherFlow API with new config...');
                 wApi = new WxData(myAppMan.config.apiKey);
                 setupWxEvents();
@@ -119,7 +119,7 @@ function getCurrentConditions(){
 
 function getCurrentPoller() {
     console.log('Starting get current WX conditions poller every '+ getCurrentWxInterval+' minutes.');
-    clearInterval(getCurrentPoller);
+    clearInterval(getCurrentPollerTimer);
     getCurrentPoller = setInterval(() => {
         getCurrentConditions();
     }, getCurrentWxInterval * 60000);
