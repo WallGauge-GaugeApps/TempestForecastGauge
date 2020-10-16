@@ -35,12 +35,13 @@ class gaugeApp {
                 clearInterval(mainPoller);
                 console.log('Re-Init WeatherFlow API with new config...');
                 wApi = new WxData(myAppMan.config.apiKey);
+                setupWxEvents();
             };
         });
 
         myAppMan.on('apiKey', (newKey) => {
-            console.log('A new apiKey event received.');
-            myAppMan.setGaugeStatus('Received new apiKey.' + newKey);
+            console.log('A new apiKey event received. ' + newKey);
+            myAppMan.setGaugeStatus('Received new apiKey.');
             var objToSave = {
                 apiKey: newKey
             }
