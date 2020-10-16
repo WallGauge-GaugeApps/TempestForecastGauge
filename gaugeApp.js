@@ -1,8 +1,7 @@
 const WxData = require('weatherflow-data-getter');
 const MyAppMan = require('./MyAppManager.js');
 
-const reconnectInterval = 60;    // in minutes
-const getTrendInterval = 10;     // in minutes
+const getCurrentWxInterval = 10;     // in minutes
 
 var mainPoller = null;
 var randomStart = getRandomInt(5000, 60000);
@@ -53,7 +52,7 @@ class gaugeApp {
         });
 
         console.log('First data call will occur in ' + (randomStart / 1000).toFixed(2) + ' seconds.');
-        console.log('When a Sense connection is established a poller will open and close a web socket every 1 minute, read trend data every ' + getTrendInterval + ' minutes, and re-authenticate every ' + reconnectInterval + ' minutes.');
+        console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes.');
 
         setTimeout(() => {
             wApi = new WxData(myAppMan.config.apiKey);
