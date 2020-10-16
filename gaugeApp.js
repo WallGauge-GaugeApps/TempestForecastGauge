@@ -96,7 +96,7 @@ function getAllWxData() {
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
                 wApi.data.forecast.precipChance + "%, obs = " +
-                wApi.data.obsDate.toLocaleTimeString()
+                wApi.data.obsDate
             );
 
             console.log('Getting all rain history....');
@@ -123,7 +123,7 @@ function getCurrentConditions() {
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
                 wApi.data.forecast.precipChance + "%, obs = " +
-                wApi.data.obsDate.toLocaleTimeString()
+                wApi.data.obsDate
             );
         })
         .catch((err) => {
