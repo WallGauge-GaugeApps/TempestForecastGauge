@@ -1,4 +1,3 @@
-const SenseDataDelegate = require('sense-data-getter');
 const WxData = require('weatherflow-data-getter');
 const MyAppMan = require('./MyAppManager.js');
 
