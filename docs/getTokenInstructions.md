@@ -13,3 +13,6 @@ A personal use token is required to allow this gauge app access to your Tempest 
 ## Video Instructions
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xGuKNiLO4ZA/0.jpg)](https://youtu.be/xGuKNiLO4ZA)
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xGuKNiLO4ZA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
