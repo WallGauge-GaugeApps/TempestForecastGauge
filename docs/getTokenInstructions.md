@@ -10,9 +10,6 @@ A personal use token is required to allow this gauge app access to your Tempest 
  4. Tap on the "Copy" button to copy the new token to your clipboard.
  5. Go back to the GDT Administrator and paste it into the Token window.
 
-## Video Instructions
-
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xGuKNiLO4ZA/0.jpg)](https://youtu.be/xGuKNiLO4ZA)
-
+## [Video Instructions](https://youtu.be/xGuKNiLO4ZA)
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xGuKNiLO4ZA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
