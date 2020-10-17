@@ -101,6 +101,9 @@ function getAllWxData() {
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
+            try{
+                myAppMan.setGaugeStatus('Error getting all weather data. ');
+            } catch(e){}
         })
 };
 
@@ -124,6 +127,9 @@ function getCurrentConditions() {
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
+            try{
+                myAppMan.setGaugeStatus('Error getting current weather conditions. ');
+            } catch(e){}
         })
 };
 
