@@ -42,10 +42,6 @@ class gaugeApp {
         myAppMan.on('apiKey', (newKey) => {
             console.log('A new apiKey event received. ');
             myAppMan.setGaugeStatus('Received new apiKey.');
-            var objToSave = {
-                apiKey: newKey
-            }
-            myAppMan.saveItem(objToSave);
         })
 
         console.log('First data call will occur in ' + (randomStart / 1000).toFixed(2) + ' seconds.');
