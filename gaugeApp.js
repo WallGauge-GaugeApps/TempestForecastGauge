@@ -6,6 +6,7 @@ const getCurrentWxInterval = 5;     // in minutes
 var getCurrentPollerTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
+var inAlert = false;
 var wApi = {}       //new WxData();
 var myAppMan = {};
 
@@ -30,6 +31,10 @@ class gaugeApp {
             if (myAppMan.config.apiKey == '' || myAppMan.config.apiKey == null) {
                 console.warn('weatherFlow API Key not set.  Waiting for user to set value...');
                 myAppMan.setGaugeStatus('weatherFlow API Key not set. Please set a new API Key for this station. ');
+                if (inAlert == false) {
+                    myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                    inAlert = true;
+                };
             } else {
                 myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
                 clearInterval(getCurrentPollerTimer);
@@ -51,6 +56,10 @@ class gaugeApp {
             if (myAppMan.config.apiKey == '' || myAppMan.config.apiKey == null) {
                 console.warn('weatherFlow API Key not set.  Waiting for user to set value...');
                 myAppMan.setGaugeStatus('weatherFlow API Key not set. Please set a new API Key for this station. ');
+                if (inAlert == false) {
+                    myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                    inAlert = true;
+                };
             } else {
                 wApi = new WxData(myAppMan.config.apiKey);
                 setupWxEvents();
@@ -70,6 +79,10 @@ function setupWxEvents() {
     wApi.on('errorStationMetaData', (err) => {
         console.error('Error with weatherflow-data-getter class construction.', err);
         myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
+        if (inAlert == false) {
+            myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+            inAlert = true;
+        };
     });
 };
 
@@ -94,12 +107,21 @@ function getAllWxData() {
                 wApi.data.forecast.precipChance + "%, obs = " +
                 wApi.data.obsDate
             );
+            myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
+            if (inAlert == true) {
+                myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
+                inAlert = false;
+            };
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
-            try{
+            try {
                 myAppMan.setGaugeStatus('Error getting all weather data. ');
-            } catch(e){}
+                if (inAlert == false) {
+                    myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                    inAlert = true;
+                };
+            } catch (e) { }
         })
 };
 
@@ -120,12 +142,21 @@ function getCurrentConditions() {
                 wApi.data.forecast.precipChance + "%, obs = " +
                 wApi.data.obsDate
             );
+            myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
+            if (inAlert == true) {
+                myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
+                inAlert = false;
+            };
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
-            try{
+            try {
                 myAppMan.setGaugeStatus('Error getting current weather conditions. ');
-            } catch(e){}
+                if (inAlert == false) {
+                    myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                    inAlert = true;
+                };
+            } catch (e) { }
         })
 };
 
