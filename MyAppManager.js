@@ -9,8 +9,8 @@ class myAppManager extends AppMan {
             console.log(device + ', has set new user apiKey.');
             this.apiKey = arg1.toString('utf8');
             apiKey.setValue(this.apiKey)
-            this.saveItem({apiKey:this.apiKey});
             this.emit('apiKey', this.apiKey);
+            this.saveItem({apiKey:this.apiKey});
         });
 
         apiKey.on('ReadValue', (device)=>{
