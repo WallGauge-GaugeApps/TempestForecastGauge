@@ -1,0 +1,5 @@
+{
+"descripition":"Forecast High",
+"calibrationTable": [[-40,38],[130,640]],
+"gaugeIrAddress":"21"
+}

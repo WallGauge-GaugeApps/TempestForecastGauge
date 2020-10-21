@@ -1,5 +1,9 @@
 const WxData = require('weatherflow-data-getter');
 const MyAppMan = require('./MyAppManager.js');
+const irTransmitter = require('irdtxclass');
+const gcForecastHigh = require('./secondaryGauges/ForecastHigh.json');
+const gcForecastLow = require('./secondaryGauges/ForecastLow.json');
+const gcPrecipChance = require('./secondaryGauges/PrecipChance.json');
 
 const getCurrentWxInterval = 5;     // in minutes
 
@@ -9,6 +13,9 @@ var randomStart = getRandomInt(5000, 60000);
 var inAlert = false;
 var wApi = {}       //new WxData();
 var myAppMan = {};
+var sgFCastHigh = {};
+var sgFCastLow = {};
+var sgPrecip = {};
 
 class gaugeApp {
     /**
@@ -24,7 +31,10 @@ class gaugeApp {
         } else {
             myAppMan = new MyAppMan(__dirname + '/gaugeConfig.json', __dirname + '/modifiedConfig.encrypted', true, encryptionKey);
         };
-        // console.log('Establishing connection for secondary gauges to irTransmitter...');
+        console.log('Establishing connection for secondary gauges to irTransmitter...');
+        sgFCastHigh = new irTransmitter(gcForecastHigh.gaugeIrAddress, gcForecastHigh.calibrationTable);
+        sgFCastLow = new irTransmitter(gcForecastLow.gaugeIrAddress, gcForecastLow.calibrationTable);
+        sgPrecip = new irTransmitter(gcPrecipChance.gaugeIrAddress, gcPrecipChance.calibrationTable);
 
         myAppMan.on('Update', () => {
             console.log('New update event has fired.  Reloading gauge objects...');
@@ -100,7 +110,6 @@ function getAllWxData() {
         .then((rslt) => {
             console.log("Get forecast complete:");
             console.dir(wApi.data.forecast, { depth: null });
-
             myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
@@ -112,6 +121,9 @@ function getAllWxData() {
                 myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
                 inAlert = false;
             };
+            sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
+            sgFCastLow.sendValue(wApi.data.forecast.minTemp);
+            sgPrecip.sendValue(wApi.data.forecast.precipChance);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -135,7 +147,6 @@ function getCurrentConditions() {
                 wApi.data.forecast.minTemp + "°F, precip =" +
                 wApi.data.forecast.precipChance + "%."
             );
-
             myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
@@ -147,6 +158,9 @@ function getCurrentConditions() {
                 myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
                 inAlert = false;
             };
+            sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
+            sgFCastLow.sendValue(wApi.data.forecast.minTemp);
+            sgPrecip.sendValue(wApi.data.forecast.precipChance);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
