@@ -6,12 +6,15 @@ const gcForecastLow = require('./secondaryGauges/ForecastLow.json');
 const gcPrecipChance = require('./secondaryGauges/PrecipChance.json');
 
 const getCurrentWxInterval = 5;     // in minutes
+const getForecastInteral = 15;      // in minutes
 
 var getCurrentPollerTimer = null;
+var getForecastPollerTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var inAlert = false;
-var wApi = {}       //new WxData();
+var wApi = new WxData();
+// var wApi = {};
 var myAppMan = {};
 var sgFCastHigh = {};
 var sgFCastLow = {};
@@ -84,6 +87,7 @@ function setupWxEvents() {
         console.log('WeatherFlow API ready to receive calls for station named: ' + wApi.station.publicName);
         getAllWxData();
         getCurrentPoller();
+        getForecastPoller();
     });
 
     wApi.on('errorStationMetaData', (err) => {
@@ -174,12 +178,57 @@ function getCurrentConditions() {
         })
 };
 
+function getTodaysForecast() {
+    console.log("Requesting Today's Forecast...");
+    wApi.getForecast()
+        .then((rslt) => {
+            console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
+                wApi.data.current.temp, '°F, max = ' +
+                wApi.data.forecast.maxTemp + "°F, min = " +
+                wApi.data.forecast.minTemp + "°F, precip =" +
+                wApi.data.forecast.precipChance + "%."
+            );
+            myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
+                wApi.data.forecast.maxTemp + "°F, " +
+                wApi.data.forecast.minTemp + "°F, " +
+                wApi.data.forecast.precipChance + "%, obs = " +
+                wApi.data.obsDate
+            );
+            myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
+            if (inAlert == true) {
+                myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
+                inAlert = false;
+            };
+            sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
+            sgFCastLow.sendValue(wApi.data.forecast.minTemp);
+            sgPrecip.sendValue(wApi.data.forecast.precipChance);
+        })
+        .catch((err) => {
+            console.error('Error calling wApi:', err);
+            try {
+                myAppMan.setGaugeStatus('Error getting Today\`s forecast. ');
+                if (inAlert == false) {
+                    myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                    inAlert = true;
+                };
+            } catch (e) { }
+        })
+};
+
 function getCurrentPoller() {
     console.log('Starting get current WX conditions poller.  It will update every ' + getCurrentWxInterval + ' minutes.');
     clearInterval(getCurrentPollerTimer);
     getCurrentPoller = setInterval(() => {
         getCurrentConditions();
     }, getCurrentWxInterval * 60000);
+};
+
+function getForecastPoller() {
+    console.log('Starting get today\`s forecast poller.  It will update every ' + getForecastInteral + ' minutes.');
+    clearInterval(getForecastPollerTimer);
+    getForecastPollerTimer = setInterval(() => {
+        getTodaysForecast();
+    }, getForecastInteral * 60000);
 };
 
 function getRandomInt(min, max) {
