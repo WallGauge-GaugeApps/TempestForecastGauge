@@ -13,8 +13,8 @@ var getForecastPollerTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var inAlert = false;
-var wApi = new WxData();
-// var wApi = {};
+// var wApi = new WxData();
+var wApi = {};
 var myAppMan = {};
 var sgFCastHigh = {};
 var sgFCastLow = {};
@@ -63,7 +63,7 @@ class gaugeApp {
         })
 
         console.log('First data call will occur in ' + (randomStart / 1000).toFixed(2) + ' seconds.');
-        console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes.');
+        console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes, and forecast data every ' + getForecastInteral + ' minutes.');
 
         setTimeout(() => {
             if (myAppMan.config.apiKey == '' || myAppMan.config.apiKey == null) {
