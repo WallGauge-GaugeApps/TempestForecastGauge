@@ -2,7 +2,7 @@
 
 ## How to get a Personal Use Token
 
-The WallGauge GDT accesses your Tempest weather data through a secure connection to [WeatherFlow’s Smart Weather API](https://weatherflow.github.io/SmartWeather/api/#object-model).  In order for this GDT to access your Tempest weather data you will need to create a personal use token with your tempestwx.com account.  Once you create the token you will then need to use the GDT Administrator iPhone app to type it into the GDT.  See the instructions below for details.
+The WallGauge GDT accesses your Tempest weather data through a secure connection to [WeatherFlow’s Smart Weather API](https://weatherflow.github.io/SmartWeather/api/#object-model).  In order for this GDT to find and access your Tempest weather data you will need to create a personal use token with your tempestwx.com account.  Once you create the token you will then need to use the [GDT Administrator iPhone app](https://www.wallgauge.com/a) to type it in or paste it into the GDT Administrator's API Key or Token field.  See the instructions below for details.
 
 ### Instructions
 
