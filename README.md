@@ -26,7 +26,7 @@ At the bottom of the main gauge you will find two error indicators labeled “Ch
 
 The data for this gauge are from the [WeatherFlow Smart Weather API](https://weatherflow.github.io/SmartWeather/api/#object-model). You must have a Tempest weather station and create a [WeatherFlow Personal Use Token](https://tempestwx.com/settings/tokens) to access your station’s cloud data with this WallGauge.  The [Smart Weather API Remote Data Access Policy](https://weatherflow.github.io/SmartWeather/api/remote-developer-policy.html) gives an overview of the access required for a station owner to access their own data.  
 
-See [How to get a tempest personal use token](https://wallgauge-gaugeapps.github.io/TempestForecastGauge/docs/getTokenInstructions.html)
+See [How to get a tempest personal use token](https://wallgauge-gaugeapps.github.io/TempestForecastGauge/docs/help.html)
 
 ## Security
 
