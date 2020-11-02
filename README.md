@@ -35,3 +35,4 @@ This gauge requires a WeatherFlow Personal Use Token (API Key) to access your Te
 ## Gauge Pictures
 
 ![pic](./docs/Temperatue4Gauge.jpg)
+![pic](./docs/Tempest4Gauge.jpeg)
