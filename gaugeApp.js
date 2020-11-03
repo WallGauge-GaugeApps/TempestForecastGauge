@@ -10,6 +10,7 @@ const getForecastInteral = 15;      // in minutes
 
 var getCurrentPollerTimer = null;
 var getForecastPollerTimer = null;
+var retryOnErrorTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var inAlert = false;
@@ -82,6 +83,7 @@ class gaugeApp {
 };
 
 function setupWxEvents() {
+    clearTimeout(retryOnErrorTimer);
     console.log('Setting up WX Events...');
     wApi.on('ready', () => {
         console.log('WeatherFlow API ready to receive calls for station named: ' + wApi.station.publicName);
@@ -114,6 +116,14 @@ function setupWxEvents() {
             myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
             inAlert = true;
         };
+        
+        console.log('Will retry weatherflow-data-getter class construction in 60 seconds...');
+        clearTimeout(retryOnErrorTimer);
+        retryOnErrorTimer = setTimeout(() => {
+            console.log('Retrying weatherflow-data-getter class construction...')
+            wApi = new WxData(myAppMan.config.apiKey);
+            setupWxEvents();
+        }, 60000)
 
     });
 };
@@ -236,7 +246,7 @@ function getTodaysForecast() {
 function getCurrentPoller() {
     console.log('Starting get current WX conditions poller.  It will update every ' + getCurrentWxInterval + ' minutes.');
     clearInterval(getCurrentPollerTimer);
-    getCurrentPoller = setInterval(() => {
+    getCurrentPollerTimer = setInterval(() => {
         getCurrentConditions();
     }, getCurrentWxInterval * 60000);
 };
