@@ -92,11 +92,23 @@ function setupWxEvents() {
 
     wApi.on('errorStationMetaData', (err) => {
         console.error('Error with weatherflow-data-getter class construction.', err);
-        myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
-        if (inAlert == false) {
-            myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
-            inAlert = true;
+        if (typeof err == 'object' && err.hasOwnProperty('status')) {
+            if (err.status.status_code == 401) {
+                myAppMan.setGaugeStatus('Error. Unauthorized. Please check the API Key. ');
+            } else {
+                myAppMan.setGaugeStatus('Error. ' + err.status.status_code + ' ' + err.status.status_message + '.');
+            }
+
+        } else {
+            myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
+            if (inAlert == false) {
+                myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                inAlert = true;
+            };
         };
+
+
+
     });
 };
 
