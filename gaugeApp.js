@@ -104,8 +104,8 @@ function setupWxEvents() {
                 console.log('setting Gauge Status = Error. Unauthorized. Please check the API Key. ')
                 myAppMan.setGaugeStatus('Error. Unauthorized. Please check the API Key. ');
             } else {
-                console.log('Setting Gauge Status = Error. ' + err.status.status_code + ' ' + err.status.status_message + '.');
-                myAppMan.setGaugeStatus('Error. ' + err.status.status_code + ' ' + err.status.status_message + '.');
+                console.log('Setting Gauge Status = Error. ' + err.status_code + ' ' + err.status_message + '.');
+                myAppMan.setGaugeStatus('Error. ' + err.status_code + ' ' + err.status_message + '.');
             };
 
         } else {
@@ -116,7 +116,7 @@ function setupWxEvents() {
             myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
             inAlert = true;
         };
-        
+
         console.log('Will retry weatherflow-data-getter class construction in 60 seconds...');
         clearTimeout(retryOnErrorTimer);
         retryOnErrorTimer = setTimeout(() => {
