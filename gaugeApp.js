@@ -95,10 +95,10 @@ function setupWxEvents() {
         let type = typeof err;
         console.log('type = ' + type);
 
-        console.log('err has the property ' + err.hasOwnProperty('status'))
+        console.log('err has the property ' + err.hasOwnProperty('status_code'))
 
-        if (type == 'object' && err.hasOwnProperty('status')) {
-            if (err.status.status_code == 401) {
+        if (type == 'object' && err.hasOwnProperty('status_code')) {
+            if (err.status_code == 401) {
                 console.log('setting Gauge Status = Error. Unauthorized. Please check the API Key. ')
                 myAppMan.setGaugeStatus('Error. Unauthorized. Please check the API Key. ');
             } else {
