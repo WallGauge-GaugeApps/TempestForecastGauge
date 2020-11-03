@@ -52,6 +52,7 @@ class gaugeApp {
             } else {
                 myAppMan.setGaugeStatus('Config updated received. Please wait, may take up to 5 minutes to reload gauge objects. ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
                 clearInterval(getCurrentPollerTimer);
+                clearInterval(getForecastPollerTimer);
                 console.log('Re-Init WeatherFlow API with new config...');
                 wApi = new WxData(myAppMan.config.apiKey);
                 setupWxEvents();
@@ -94,12 +95,7 @@ function setupWxEvents() {
 
     wApi.on('errorStationMetaData', (err) => {
         console.error('Error with weatherflow-data-getter class construction.', err);
-        let type = typeof err;
-        console.log('type = ' + type);
-
-        console.log('err has the property ' + err.hasOwnProperty('status_code'))
-
-        if (type == 'object' && err.hasOwnProperty('status_code')) {
+        if ((typeof err) == 'object' && err.hasOwnProperty('status_code')) {
             if (err.status_code == 401) {
                 console.log('setting Gauge Status = Error. Unauthorized. Please check the API Key. ')
                 myAppMan.setGaugeStatus('Error. Unauthorized. Please check the API Key. ');
@@ -107,7 +103,6 @@ function setupWxEvents() {
                 console.log('Setting Gauge Status = Error. ' + err.status_code + ' ' + err.status_message + '.');
                 myAppMan.setGaugeStatus('Error. ' + err.status_code + ' ' + err.status_message + '.');
             };
-
         } else {
             myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
         };
