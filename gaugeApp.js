@@ -94,10 +94,15 @@ function setupWxEvents() {
         console.error('Error with weatherflow-data-getter class construction.', err);
         let type = typeof err;
         console.log('type = ' + type);
+
+        console.log('err has the property ' + err.hasOwnProperty('status'))
+
         if (type == 'object' && err.hasOwnProperty('status')) {
             if (err.status.status_code == 401) {
+                console.log('setting Gauge Status = Error. Unauthorized. Please check the API Key. ')
                 myAppMan.setGaugeStatus('Error. Unauthorized. Please check the API Key. ');
             } else {
+                console.log('Setting Gauge Status = Error. ' + err.status.status_code + ' ' + err.status.status_message + '.');
                 myAppMan.setGaugeStatus('Error. ' + err.status.status_code + ' ' + err.status.status_message + '.');
             };
 
