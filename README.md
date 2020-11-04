@@ -37,7 +37,7 @@ See [How to get a tempest personal use token](https://wallgauge-gaugeapps.github
 
 This gauge requires a WeatherFlow Personal Use Token (API Key) to access your Tempest cloud data.  The WeatherFlow Personal Use Token is encrypted and stored on your GDT.  We do not keep a copy of it in the cloud.  It is only used to access your Tempest weather data.  However, if your GDT is physically stolen or compromised your WeatherFlow Personal Use Token may be accessible.  To revoke a Personal Use Token, connect to the [TempestWx.com web site](https://tempestwx.com/settings/tokens) and delete it.  You can create a new one at any time.
 
-## Gauge Pictures
+## Gauge Art
 
 ![pic](./docs/Temperatue4Gauge.jpg)
 ![pic](./docs/Tempest4Gauge.jpeg)
