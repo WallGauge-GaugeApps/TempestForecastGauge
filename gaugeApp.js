@@ -84,6 +84,7 @@ class gaugeApp {
 };
 
 function setupWxEvents() {
+    let retrySeconds = 60
     clearTimeout(retryOnErrorTimer);
     console.log('Setting up WX Events...');
     wApi.on('ready', () => {
@@ -99,6 +100,10 @@ function setupWxEvents() {
             if (err.status_code == 401) {
                 console.log('setting Gauge Status = Error. Unauthorized. Please check the API Key. ')
                 myAppMan.setGaugeStatus('Error. API Key Unauthorized. Retrying in 60s.');
+            } else if (err.status_code == 429) {
+                console.log('setting Gauge Status = Warning. Too Many Requests. Please check the API Key. ')
+                myAppMan.setGaugeStatus('Warning: Too many request retrying in 10s.');
+                retrySeconds = 10;
             } else {
                 console.log('Setting Gauge Status = Error. ' + err.status_code + ' ' + err.status_message + '.');
                 myAppMan.setGaugeStatus('Error. ' + err.status_code + ' ' + err.status_message + ', retrying in 60s.');
@@ -118,7 +123,7 @@ function setupWxEvents() {
             console.log('Retrying weatherflow-data-getter class construction...')
             wApi = new WxData(myAppMan.config.apiKey);
             setupWxEvents();
-        }, 60000);
+        }, retrySeconds * 1000);
 
     });
 };
