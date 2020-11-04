@@ -1,6 +1,11 @@
 # Tempest Weather WallGauge
 
-This WallGauge displays weather data from your home Tempest weather station.  The data is pulled from the WeatherFlow API (that is where your Tempest uploads its weather data)
+This WallGauge displays weather data from your home Tempest weather station.  The data is pulled from the WeatherFlow API (that is where your Tempest uploads its weather data).  
+To use this WallGauge you must have a Tempest Weather station and a valid account at tempestwx.com.
+
+![pic](./docs/GaugePic.png)
+
+[<img src="https://cdn.shopify.com/s/files/1/0012/8512/8294/files/Tempest_Hub_Mount_shopify-amazon-whats-in-box-tabs.png?v=1588185214" alt="alt text" width="640px">](https://shop.weatherflow.com/collections/frontpage/products/tempest)
 
 ## Deeper Dive
 
