@@ -98,13 +98,13 @@ function setupWxEvents() {
         if ((typeof err) == 'object' && err.hasOwnProperty('status_code')) {
             if (err.status_code == 401) {
                 console.log('setting Gauge Status = Error. Unauthorized. Please check the API Key. ')
-                myAppMan.setGaugeStatus('Error. Unauthorized. Please check the API Key. ');
+                myAppMan.setGaugeStatus('Error. API Key Unauthorized. Retrying in 60s.');
             } else {
                 console.log('Setting Gauge Status = Error. ' + err.status_code + ' ' + err.status_message + '.');
-                myAppMan.setGaugeStatus('Error. ' + err.status_code + ' ' + err.status_message + '.');
+                myAppMan.setGaugeStatus('Error. ' + err.status_code + ' ' + err.status_message + ', retrying in 60s.');
             };
         } else {
-            myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. ');
+            myAppMan.setGaugeStatus('Error getting station Meta Data. Please check the API Key. Retrying in 60s.');
         };
 
         if (inAlert == false) {
@@ -118,7 +118,7 @@ function setupWxEvents() {
             console.log('Retrying weatherflow-data-getter class construction...')
             wApi = new WxData(myAppMan.config.apiKey);
             setupWxEvents();
-        }, 60000)
+        }, 60000);
 
     });
 };
