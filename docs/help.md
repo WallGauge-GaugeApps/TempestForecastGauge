@@ -12,10 +12,6 @@ The WallGauge GDT accesses your Tempest weather data through a secure connection
  4. Tap on the "Copy" button to copy the new token to your clipboard.
  5. Go back to the GDT Administrator and paste it into the Token window.
 
-### [Video Instructions](https://youtu.be/xGuKNiLO4ZA)
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/xGuKNiLO4ZA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
 ## Gauge Error indicators
 
 At the bottom of the main gauge you will find two error indicators labeled “Check data connection” and “Renew subscription”.
