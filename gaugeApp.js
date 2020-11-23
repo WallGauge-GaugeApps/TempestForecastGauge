@@ -140,7 +140,7 @@ function getAllWxData() {
             return wApi.getAccumulatedPrecipHistory()
         })
         .then((rslt) => {
-            console.log('Accumulated Precip (not including todays amount) = ' + wApi.data.history.precipEvent)
+            console.log('Accumulated Precip rturned '+ rslt +' (not including todays amount) = ' + wApi.data.history.precipEvent)
             console.log('Getting Forecast...')
             return wApi.getForecast()
         })
