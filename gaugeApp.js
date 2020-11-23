@@ -133,15 +133,14 @@ function getAllWxData() {
     wApi.getCurrent()
         .then((rslt) => {
             console.log('Get current complete. Observation Date = ' + wApi.data.obsDate);
-            // console.dir(wApi.data.current, { depth: null });
-            console.dir(wApi.data, { depth: null });
+            console.dir(wApi.data.current, { depth: null });
             console.log('Here is the lightning information:')
             console.dir(wApi.data.lightning, { depth: null });
             console.log('Getting Accumulated Precip History...')
             return wApi.updateMonthHistoryValues()
         })
         .then((rslt) => {
-            console.log('Accumulated Precip rturned '+ rslt +' (not including todays amount) = ' + wApi.data.history.precipEvent)
+            console.log('Accumulated Precip (not including todays amount) = ' + wApi.data.history.precipEvent)
             console.log('Getting Forecast...')
             return wApi.getForecast()
         })
@@ -168,10 +167,6 @@ function getAllWxData() {
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
             };
-
-            console.dir(wApi.data, {depth:null});
-
-
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
