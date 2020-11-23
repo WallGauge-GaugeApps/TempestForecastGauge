@@ -167,6 +167,10 @@ function getAllWxData() {
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
             };
+
+            console.dir(wApi.data, {depth:null});
+
+
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
