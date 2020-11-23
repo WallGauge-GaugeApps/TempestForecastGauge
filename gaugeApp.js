@@ -138,7 +138,7 @@ function getAllWxData() {
             console.log('Here is the lightning information:')
             console.dir(wApi.data.lightning, { depth: null });
             console.log('Getting Accumulated Precip History...')
-            return wApi.getAccumulatedPrecipHistory()
+            return wApi.updateMonthHistoryValues()
         })
         .then((rslt) => {
             console.log('Accumulated Precip rturned '+ rslt +' (not including todays amount) = ' + wApi.data.history.precipEvent)
