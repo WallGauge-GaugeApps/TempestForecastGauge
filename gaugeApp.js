@@ -133,7 +133,8 @@ function getAllWxData() {
     wApi.getCurrent()
         .then((rslt) => {
             console.log('Get current complete. Observation Date = ' + wApi.data.obsDate);
-            console.dir(wApi.data.current, { depth: null });
+            // console.dir(wApi.data.current, { depth: null });
+            console.dir(wApi.data, { depth: null });
             console.log('Here is the lightning information:')
             console.dir(wApi.data.lightning, { depth: null });
             console.log('Getting Accumulated Precip History...')
