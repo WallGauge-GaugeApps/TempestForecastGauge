@@ -14,8 +14,8 @@ var retryOnErrorTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var inAlert = false;
-// var wApi = new WxData();
-var wApi = {};
+var wApi = new WxData();
+// var wApi = {};
 var myAppMan = {};
 var sgFCastHigh = {};
 var sgFCastLow = {};
@@ -136,6 +136,11 @@ function getAllWxData() {
             console.dir(wApi.data.current, { depth: null });
             console.log('Here is the lightning information:')
             console.dir(wApi.data.lightning, { depth: null });
+            console.log('Getting Accumulated Precip History...')
+            return wApi.getAccumulatedPrecipHistory()
+        })
+        .then((rslt) => {
+            console.log('Accumulated Precip (not including todays amount) = ' + wApi.data.history.precipEvent)
             console.log('Getting Forecast...')
             return wApi.getForecast()
         })
@@ -157,7 +162,7 @@ function getAllWxData() {
             sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
             sgFCastLow.sendValue(wApi.data.forecast.minTemp);
 
-            if(wApi.data.current.precip > 0){
+            if (wApi.data.current.precip > 0) {
                 sgPrecipCombo.sendValue(wApi.data.current.precip);
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
@@ -200,7 +205,7 @@ function getCurrentConditions() {
             };
             sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
             sgFCastLow.sendValue(wApi.data.forecast.minTemp);
-            if(wApi.data.current.precip > 0){
+            if (wApi.data.current.precip > 0) {
                 sgPrecipCombo.sendValue(wApi.data.current.precip);
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
@@ -242,7 +247,7 @@ function getTodaysForecast() {
             };
             sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
             sgFCastLow.sendValue(wApi.data.forecast.minTemp);
-            if(wApi.data.current.precip > 0){
+            if (wApi.data.current.precip > 0) {
                 sgPrecipCombo.sendValue(wApi.data.current.precip);
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
