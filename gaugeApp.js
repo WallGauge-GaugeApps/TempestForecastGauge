@@ -14,8 +14,8 @@ var retryOnErrorTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
 var inAlert = false;
-var wApi = new WxData();
-// var wApi = {};
+// var wApi = new WxData();
+var wApi = {};
 var myAppMan = {};
 var sgFCastHigh = {};
 var sgFCastLow = {};
