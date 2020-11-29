@@ -4,6 +4,7 @@ const irTransmitter = require('irdtxclass');
 const gcForecastHigh = require('./secondaryGauges/ForecastHigh.json');
 const gcForecastLow = require('./secondaryGauges/ForecastLow.json');
 const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.json');
+const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
 
 const getCurrentWxInterval = 5;     // in minutes
 const getForecastInteral = 15;      // in minutes
@@ -20,6 +21,7 @@ var myAppMan = {};
 var sgFCastHigh = {};
 var sgFCastLow = {};
 var sgPrecipCombo = {};
+var sgPrecip7Day = {};
 
 class gaugeApp {
     /**
@@ -39,6 +41,7 @@ class gaugeApp {
         sgFCastHigh = new irTransmitter(gcForecastHigh.gaugeIrAddress, gcForecastHigh.calibrationTable);
         sgFCastLow = new irTransmitter(gcForecastLow.gaugeIrAddress, gcForecastLow.calibrationTable);
         sgPrecipCombo = new irTransmitter(gcPrecipCombo.gaugeIrAddress, gcPrecipCombo.calibrationTable);
+        sgPrecip7Day = new irTransmitter(gcAccPrecp7Day.gaugeIrAddress, gcAccPrecp7Day.calibrationTable);
 
         myAppMan.on('Update', () => {
             console.log('New update event has fired.  Reloading gauge objects...');
@@ -167,6 +170,7 @@ function getAllWxData() {
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
             };
+            sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -189,13 +193,15 @@ function getCurrentConditions() {
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
                 wApi.data.forecast.precipChance + "%, " +
-                wApi.data.current.precip + '".'
+                wApi.data.current.precip + '", ' +
+                wApi.data.history.precipLast7Days + '".'
             );
             myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
                 wApi.data.forecast.maxTemp + "°F, " +
                 wApi.data.forecast.minTemp + "°F, " +
                 wApi.data.forecast.precipChance + "%, " +
                 wApi.data.current.precip + '",  ' +
+                wApi.data.history.precipLast7Days + '", ' +
                 " obs = " + wApi.data.obsDate
             );
             myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
@@ -210,6 +216,7 @@ function getCurrentConditions() {
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
             };
+            sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -252,6 +259,7 @@ function getTodaysForecast() {
             } else {
                 sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
             };
+            sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);

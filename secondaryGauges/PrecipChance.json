@@ -1,5 +1,5 @@
 {
-"descripition":"Chance of precipitation",
+"descripition":"Precip chance and Accumulation combo gague",
 "calibrationTable": [[0,42],[10,67],[20,94],[30,119],[40,145],[50,171],[60,197],[70,222],[80,249],[90,273],[100,299]],
 "gaugeIrAddress":"23"
 }
