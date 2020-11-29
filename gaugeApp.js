@@ -7,10 +7,12 @@ const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.jso
 const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
 
 const getCurrentWxInterval = 5;     // in minutes
-const getForecastInteral = 15;      // in minutes
+const getForecastInterval = 15;     // in minutes
+const getHistoryInterval = 60;      // in minutes
 
 var getCurrentPollerTimer = null;
 var getForecastPollerTimer = null;
+var getHistoryPollerTimer = null;
 var retryOnErrorTimer = null;
 var randomStart = getRandomInt(5000, 60000);
 
@@ -68,7 +70,7 @@ class gaugeApp {
         })
 
         console.log('First data call will occur in ' + (randomStart / 1000).toFixed(2) + ' seconds.');
-        console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes, and forecast data every ' + getForecastInteral + ' minutes.');
+        console.log('When a WeatherFlow API connection is established a poller will open and read weather data every ' + getCurrentWxInterval + ' minutes, and forecast data every ' + getForecastInterval + ' minutes.');
 
         setTimeout(() => {
             if (myAppMan.config.apiKey == '' || myAppMan.config.apiKey == null) {
@@ -95,6 +97,7 @@ function setupWxEvents() {
         getAllWxData();
         getCurrentPoller();
         getForecastPoller();
+        getHistoryPoller();
     });
 
     wApi.on('errorStationMetaData', (err) => {
@@ -185,39 +188,6 @@ function getAllWxData() {
             } catch (e) { }
         })
 };
-
-function txGaugeData() {
-
-    console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
-        wApi.data.current.temp, '°F, max = ' +
-        wApi.data.forecast.maxTemp + "°F, " +
-        wApi.data.forecast.minTemp + "°F, " +
-        wApi.data.forecast.precipChance + "%, " +
-        wApi.data.current.precip + '", ' +
-        wApi.data.history.precipLast7Days + '".'
-    );
-    myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
-        wApi.data.forecast.maxTemp + "°F, " +
-        wApi.data.forecast.minTemp + "°F, " +
-        wApi.data.forecast.precipChance + "%, " +
-        wApi.data.current.precip + '",  ' +
-        wApi.data.history.precipLast7Days + '", ' +
-        " obs = " + wApi.data.obsDate
-    );
-    myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-    if (inAlert == true) {
-        myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
-        inAlert = false;
-    };
-    sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
-    sgFCastLow.sendValue(wApi.data.forecast.minTemp);
-    if (wApi.data.current.precip > 0) {
-        sgPrecipCombo.sendValue(wApi.data.current.precip);
-    } else {
-        sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
-    };
-    sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
-}
 
 function getCurrentConditions() {
     console.log('Requesting current weater...');
@@ -310,6 +280,57 @@ function getTodaysForecast() {
         })
 };
 
+function getHistory() {
+    console.log("Updating monthly weather history...");
+    wApi.updateMonthHistoryValues()
+        .then((rslt) => {
+            txGaugeData();
+        })
+        .catch((err) => {
+            console.error('Error calling wApi:', err);
+            try {
+                myAppMan.setGaugeStatus('Error Updating monthly weather history.... ');
+                if (inAlert == false) {
+                    myAppMan.sendAlert({ [myAppMan.config.descripition]: "1" });
+                    inAlert = true;
+                };
+            } catch (e) { }
+        })
+};
+
+function txGaugeData() {
+
+    console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
+        wApi.data.current.temp, '°F, max = ' +
+        wApi.data.forecast.maxTemp + "°F, " +
+        wApi.data.forecast.minTemp + "°F, " +
+        wApi.data.forecast.precipChance + "%, " +
+        wApi.data.current.precip + '", ' +
+        wApi.data.history.precipLast7Days + '".'
+    );
+    myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
+        wApi.data.forecast.maxTemp + "°F, " +
+        wApi.data.forecast.minTemp + "°F, " +
+        wApi.data.forecast.precipChance + "%, " +
+        wApi.data.current.precip + '",  ' +
+        wApi.data.history.precipLast7Days + '", ' +
+        " obs = " + wApi.data.obsDate
+    );
+    myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
+    if (inAlert == true) {
+        myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
+        inAlert = false;
+    };
+    sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
+    sgFCastLow.sendValue(wApi.data.forecast.minTemp);
+    if (wApi.data.current.precip > 0) {
+        sgPrecipCombo.sendValue(wApi.data.current.precip);
+    } else {
+        sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
+    };
+    sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
+}
+
 function getCurrentPoller() {
     console.log('Starting get current WX conditions poller.  It will update every ' + getCurrentWxInterval + ' minutes.');
     clearInterval(getCurrentPollerTimer);
@@ -319,11 +340,19 @@ function getCurrentPoller() {
 };
 
 function getForecastPoller() {
-    console.log('Starting get today\`s forecast poller.  It will update every ' + getForecastInteral + ' minutes.');
+    console.log('Starting get today\`s forecast poller.  It will update every ' + getForecastInterval + ' minutes.');
     clearInterval(getForecastPollerTimer);
     getForecastPollerTimer = setInterval(() => {
         getTodaysForecast();
-    }, getForecastInteral * 60000);
+    }, getForecastInterval * 60000);
+};
+
+function getHistoryPoller() {
+    console.log('Starting get weather history poller.  It will update every ' + getHistoryInterval + ' minutes.');
+    clearInterval(getHistoryPollerTimer);
+    getHistoryPollerTimer = setInterval(() => {
+        getHistory();
+    }, getHistoryInterval * 60000);
 };
 
 function getRandomInt(min, max) {
