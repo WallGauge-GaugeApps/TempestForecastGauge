@@ -7,8 +7,8 @@ const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.jso
 const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
 
 const getCurrentWxInterval = 5;     // in minutes
-const getForecastInterval = 15;     // in minutes
-const getHistoryInterval = 60;      // in minutes
+const getForecastInterval = 16;     // in minutes
+const getHistoryInterval = 59;      // in minutes
 
 var getCurrentPollerTimer = null;
 var getForecastPollerTimer = null;
@@ -284,6 +284,7 @@ function getHistory() {
     console.log("Updating monthly weather history...");
     wApi.updateMonthHistoryValues()
         .then((rslt) => {
+            console.log('History updateded, sending new values...');
             txGaugeData();
         })
         .catch((err) => {
