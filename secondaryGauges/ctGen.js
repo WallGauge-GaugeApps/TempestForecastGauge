@@ -1,7 +1,7 @@
 
 
-const rawMin = 17
-const rawMax = 615
+const rawMin = 12
+const rawMax = 610
 const resolution = .1
 const maxGaugeValue = 9
 
