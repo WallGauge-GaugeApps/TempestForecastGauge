@@ -20,7 +20,7 @@ for (i = 1; i <= (maxGaugeValue + 1); i = i + resolution) {
     let x = Math.round((Math.log10(i) * (rawMax - rawMin)) + rawMin);
 
     let gaugeValue = (Number(i) - 1).toFixed(1)
-    // gaugeValue = gaugeValue * 10
+    gaugeValue = gaugeValue * 10
     tableString += '[' + gaugeValue + ',' + x + ']'
     if(Number(i).toFixed(1) != 10.0){tableString += ','};
 }

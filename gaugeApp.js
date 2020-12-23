@@ -5,6 +5,7 @@ const gcForecastHigh = require('./secondaryGauges/ForecastHigh.json');
 const gcForecastLow = require('./secondaryGauges/ForecastLow.json');
 const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.json');
 const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
+const gcWindAvg = require('./secondaryGauges//WindSpeed.json');
 
 const getCurrentWxInterval = 5;     // in minutes
 const getForecastInterval = 16;     // in minutes
@@ -24,6 +25,7 @@ var sgFCastHigh = {};
 var sgFCastLow = {};
 var sgPrecipCombo = {};
 var sgPrecip7Day = {};
+var sgWindSpeed = {};
 
 class gaugeApp {
     /**
@@ -44,6 +46,7 @@ class gaugeApp {
         sgFCastLow = new irTransmitter(gcForecastLow.gaugeIrAddress, gcForecastLow.calibrationTable);
         sgPrecipCombo = new irTransmitter(gcPrecipCombo.gaugeIrAddress, gcPrecipCombo.calibrationTable);
         sgPrecip7Day = new irTransmitter(gcAccPrecp7Day.gaugeIrAddress, gcAccPrecp7Day.calibrationTable);
+        sgWindSpeed = new irTransmitter(gcWindAvg.gaugeIrAddress, gcWindAvg.calibrationTable);
 
         myAppMan.on('Update', () => {
             console.log('New update event has fired.  Reloading gauge objects...');
@@ -286,7 +289,8 @@ function txGaugeData() {
         wApi.data.forecast.minTemp + "°F, " +
         wApi.data.forecast.precipChance + "%, " +
         wApi.data.current.precip + '", ' +
-        (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '".'
+        (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '", ' +
+        wApi.data.current.wind + "mph."
     );
     myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
         wApi.data.forecast.maxTemp + "°F, " +
@@ -294,6 +298,7 @@ function txGaugeData() {
         wApi.data.forecast.precipChance + "%, " +
         wApi.data.current.precip + '",  ' +
         (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '", ' +
+        wApi.data.current.wind + "mph," +
         " obs = " + wApi.data.obsDate
     );
     myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
@@ -309,6 +314,7 @@ function txGaugeData() {
         sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
     };
     sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days + wApi.data.current.precip);
+    sgWindSpeed.sendValue(wApi.data.current.wind)
 }
 
 function getCurrentPoller() {
