@@ -155,27 +155,6 @@ function getAllWxData() {
             console.log("Get forecast complete:");
             console.dir(wApi.data.forecast, { depth: null });
             txGaugeData()
-            // myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
-            //     wApi.data.forecast.maxTemp + "°F, " +
-            //     wApi.data.forecast.minTemp + "°F, " +
-            //     wApi.data.forecast.precipChance + "%, " +
-            //     wApi.data.current.precip + '",  ' +
-            //     " obs = " + wApi.data.obsDate
-            // );
-            // myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-            // if (inAlert == true) {
-            //     myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
-            //     inAlert = false;
-            // };
-            // sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
-            // sgFCastLow.sendValue(wApi.data.forecast.minTemp);
-
-            // if (wApi.data.current.precip > 0) {
-            //     sgPrecipCombo.sendValue(wApi.data.current.precip);
-            // } else {
-            //     sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
-            // };
-            // sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -307,14 +286,14 @@ function txGaugeData() {
         wApi.data.forecast.minTemp + "°F, " +
         wApi.data.forecast.precipChance + "%, " +
         wApi.data.current.precip + '", ' +
-        wApi.data.history.precipLast7Days + '".'
+        (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '".'
     );
     myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
         wApi.data.forecast.maxTemp + "°F, " +
         wApi.data.forecast.minTemp + "°F, " +
         wApi.data.forecast.precipChance + "%, " +
         wApi.data.current.precip + '",  ' +
-        wApi.data.history.precipLast7Days + '", ' +
+        (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '", ' +
         " obs = " + wApi.data.obsDate
     );
     myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
@@ -329,7 +308,7 @@ function txGaugeData() {
     } else {
         sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
     };
-    sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
+    sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days + wApi.data.current.precip);
 }
 
 function getCurrentPoller() {
