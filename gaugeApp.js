@@ -282,14 +282,14 @@ function getHistory() {
 };
 
 function txGaugeData() {
-
+    let w7day = Number(wApi.data.history.precipLast7Days + wApi.data.current.precip).toFixed(2);
     console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
         wApi.data.current.temp, '°F, max = ' +
         wApi.data.forecast.maxTemp + "°F, " +
         wApi.data.forecast.minTemp + "°F, " +
         wApi.data.forecast.precipChance + "%, " +
         wApi.data.current.precip + '", ' +
-        (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '", ' +
+        w7day + '", ' +
         wApi.data.current.wind + "mph."
     );
     myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
@@ -297,7 +297,7 @@ function txGaugeData() {
         wApi.data.forecast.minTemp + "°F, " +
         wApi.data.forecast.precipChance + "%, " +
         wApi.data.current.precip + '",  ' +
-        (wApi.data.history.precipLast7Days + wApi.data.current.precip) + '", ' +
+        w7day + '", ' +
         wApi.data.current.wind + "mph," +
         " obs = " + wApi.data.obsDate
     );
