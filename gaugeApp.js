@@ -7,7 +7,7 @@ const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.jso
 const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
 const gcWindAvg = require('./secondaryGauges//WindSpeed.json');
 
-const getCurrentWxInterval = 5;     // in minutes
+const getCurrentWxInterval = 30;    // in seconds
 const getForecastInterval = 16;     // in minutes
 const getHistoryInterval = 59;      // in minutes
 
@@ -322,7 +322,7 @@ function getCurrentPoller() {
     clearInterval(getCurrentPollerTimer);
     getCurrentPollerTimer = setInterval(() => {
         getCurrentConditions();
-    }, getCurrentWxInterval * 60000);
+    }, getCurrentWxInterval * 1000);
 };
 
 function getForecastPoller() {
