@@ -15,15 +15,16 @@ class myAppManager extends AppMan {
 
         apiKey.on('ReadValue', (device)=>{
             console.log(device + ' has connected and is reading apiKey');
-            apiKey.setValue(this.config.apiKey);
+            
             let rtnString = 'Tap here to set new key';
             if (this.config.apiKey != ''){
                 rtnString = 'API Key set. Tap to change.';
             };
+            apiKey.setValue(rtnString);
             return (rtnString);
         });
 
-        apiKey.setValue(this.config.apiKey)
+        apiKey.setValue('Tap here to set new key')
     };
 };
 

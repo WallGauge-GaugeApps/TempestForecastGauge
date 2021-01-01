@@ -7,7 +7,7 @@ const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.jso
 const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
 const gcWindAvg = require('./secondaryGauges//WindSpeed.json');
 
-const getCurrentWxInterval = 30;    // in seconds
+const getCurrentWxInterval = 60;    // in seconds
 const getForecastInterval = 16;     // in minutes
 const getHistoryInterval = 59;      // in minutes
 
@@ -176,35 +176,6 @@ function getCurrentConditions() {
     wApi.getCurrent()
         .then((rslt) => {
             txGaugeData();
-            // console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
-            //     wApi.data.current.temp, '°F, max = ' +
-            //     wApi.data.forecast.maxTemp + "°F, " +
-            //     wApi.data.forecast.minTemp + "°F, " +
-            //     wApi.data.forecast.precipChance + "%, " +
-            //     wApi.data.current.precip + '", ' +
-            //     wApi.data.history.precipLast7Days + '".'
-            // );
-            // myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
-            //     wApi.data.forecast.maxTemp + "°F, " +
-            //     wApi.data.forecast.minTemp + "°F, " +
-            //     wApi.data.forecast.precipChance + "%, " +
-            //     wApi.data.current.precip + '",  ' +
-            //     wApi.data.history.precipLast7Days + '", ' +
-            //     " obs = " + wApi.data.obsDate
-            // );
-            // myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-            // if (inAlert == true) {
-            //     myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
-            //     inAlert = false;
-            // };
-            // sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
-            // sgFCastLow.sendValue(wApi.data.forecast.minTemp);
-            // if (wApi.data.current.precip > 0) {
-            //     sgPrecipCombo.sendValue(wApi.data.current.precip);
-            // } else {
-            //     sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
-            // };
-            // sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -223,32 +194,6 @@ function getTodaysForecast() {
     wApi.getForecast()
         .then((rslt) => {
             txGaugeData();
-            // console.log('Wx for: ' + wApi.data.obsDate + ', current = ' +
-            //     wApi.data.current.temp, '°F, max = ' +
-            //     wApi.data.forecast.maxTemp + "°F, min = " +
-            //     wApi.data.forecast.minTemp + "°F, precip =" +
-            //     wApi.data.forecast.precipChance + "%."
-            // );
-            // myAppMan.setGaugeValue(wApi.data.current.temp, '°F, ' +
-            //     wApi.data.forecast.maxTemp + "°F, " +
-            //     wApi.data.forecast.minTemp + "°F, " +
-            //     wApi.data.forecast.precipChance + "%, " +
-            //     wApi.data.current.precip + '",  ' +
-            //     " obs = " + wApi.data.obsDate
-            // );
-            // myAppMan.setGaugeStatus('Okay, ' + (new Date()).toLocaleTimeString() + ', ' + (new Date()).toLocaleDateString());
-            // if (inAlert == true) {
-            //     myAppMan.sendAlert({ [myAppMan.config.descripition]: "0" });
-            //     inAlert = false;
-            // };
-            // sgFCastHigh.sendValue(wApi.data.forecast.maxTemp);
-            // sgFCastLow.sendValue(wApi.data.forecast.minTemp);
-            // if (wApi.data.current.precip > 0) {
-            //     sgPrecipCombo.sendValue(wApi.data.current.precip);
-            // } else {
-            //     sgPrecipCombo.sendValue(wApi.data.forecast.precipChance * -1);
-            // };
-            // sgPrecip7Day.sendValue(wApi.data.history.precipLast7Days);
         })
         .catch((err) => {
             console.error('Error calling wApi:', err);
@@ -318,7 +263,7 @@ function txGaugeData() {
 }
 
 function getCurrentPoller() {
-    console.log('Starting get current WX conditions poller.  It will update every ' + getCurrentWxInterval + ' minutes.');
+    console.log('Starting get current WX conditions poller.  It will update every ' + getCurrentWxInterval + ' seconds.');
     clearInterval(getCurrentPollerTimer);
     getCurrentPollerTimer = setInterval(() => {
         getCurrentConditions();
