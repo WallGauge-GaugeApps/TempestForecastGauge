@@ -7,7 +7,7 @@ const gcPrecipCombo = require('./secondaryGauges/PrcpChanceAccumulationCombo.jso
 const gcAccPrecp7Day = require('./secondaryGauges/Precp7Day.json');
 const gcWindAvg = require('./secondaryGauges//WindSpeed.json');
 
-const getCurrentWxInterval = 60;    // in seconds
+const getCurrentWxInterval = 120;    // in seconds
 const getForecastInterval = 16;     // in minutes
 const getHistoryInterval = 59;      // in minutes
 
