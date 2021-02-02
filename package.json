@@ -1,6 +1,6 @@
 {
   "name": "tempest-forecast-gauge",
-  "version": "6.6.2",
+  "version": "6.6.3",
   "description": "Sends data to RG-wallhang wirelessly over infrared",
   "main": "app.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "app-manager": "git+https://github.com/WallGauge/appManager.git",
     "cipher": "git+https://github.com/WallGauge/Cipher.git",
     "irdtxclass": "git+https://github.com/WallGauge/irdTxClass.git",
-    "weatherflow-data-getter": "git+https://github.com/WallGauge-GaugeApps/weatherFlowDataGetter.git"
+    "weatherflow-data-getter": "git+https://github.com/WallGauge-GaugeApps/weatherFlowDataGetter.git",
+    "ble-peripheral":"git+https://github.com/RuckerGauge/blePeripheral.git"
   }
 }
